@@ -1,0 +1,384 @@
+/* Variables pour les couleurs pour faciliter les modifications */
+:root {
+    --bg-dark-blue: #2c3e50;
+    --header-blue: #34495e;
+    --button-blue: #3498db;
+    --button-green: #27ae60;
+    --button-red: #e74c3c;
+    --button-gray: #7f8c8d;
+    --text-light: #ecf0f1;
+    --text-white: white;
+    --text-green: #2ecc71;
+    --text-orange: #f39c12;
+    --text-purple: #9b59b6;
+    --text-red: #e74c3c;
+    --text-gold: #f1c40f; /* Pour le 1er au classement */
+    --text-silver: #bdc3c7; /* Pour le 2ème au classement */
+    --text-bronze: #d35400; /* Pour le 3ème au classement */
+}
+
+body {
+    font-family: 'Roboto', sans-serif; /* Police moderne et lisible */
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-dark-blue);
+    color: var(--text-white);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    touch-action: manipulation; /* Améliore la réactivité sur mobile */
+}
+
+#app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+    max-width: 600px; /* Taille typique d'un écran de téléphone */
+    margin: 0 auto; /* Centrer sur des écrans plus larges */
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    background-color: var(--bg-dark-blue);
+}
+
+/* En-tête */
+.app-header {
+    background-color: var(--header-blue);
+    color: var(--text-white);
+    padding: 20px 15px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.app-header h1 {
+    font-size: 1.4em;
+    margin: 0;
+    font-weight: bold;
+}
+
+.app-header #sub-title {
+    font-size: 1em;
+    margin: 5px 0 0;
+    color: var(--text-light);
+}
+
+/* Contenu principal (pour les boutons, les listes, etc.) */
+#main-content {
+    flex-grow: 1; /* Prend tout l'espace disponible */
+    padding: 15px;
+    overflow-y: auto; /* Permet le défilement si le contenu dépasse */
+    -webkit-overflow-scrolling: touch; /* Améliore le défilement sur iOS */
+}
+
+/* Styles des boutons de menu */
+.menu-button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Espacement entre les boutons */
+    align-items: center;
+    padding: 20px 0;
+}
+
+.menu-button {
+    width: 90%; /* Occupe presque toute la largeur disponible */
+    max-width: 350px; /* Limite la largeur des boutons sur les grands écrans */
+    padding: 18px 20px;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: var(--text-white);
+    background-color: var(--button-blue);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.menu-button:hover {
+    background-color: #2980b9; /* Bleu plus foncé au survol */
+    transform: translateY(-2px);
+}
+
+.menu-button:active {
+    background-color: #21618C; /* Encore plus foncé au clic */
+    transform: translateY(0);
+}
+
+.menu-button.quit-button {
+    background-color: var(--button-red);
+}
+.menu-button.quit-button:hover { background-color: #c0392b; }
+.menu-button.quit-button:active { background-color: #922b21; }
+
+
+/* Styles génériques pour les popups (modales) */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.overlay.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.popup-content {
+    background-color: var(--bg-dark-blue);
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    max-width: 90%;
+    max-height: 90vh; /* Limite la hauteur du popup */
+    overflow-y: auto; /* Permet le défilement dans le popup */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.popup-header {
+    background-color: var(--header-blue);
+    color: var(--text-white);
+    padding: 15px 20px;
+    margin: -25px -25px 20px -25px; /* S'étend sur toute la largeur du popup */
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.popup-header h2 {
+    margin: 0;
+    font-size: 1.3em;
+}
+
+.popup-close-btn {
+    background: none;
+    border: none;
+    color: var(--text-white);
+    font-size: 1.5em;
+    cursor: pointer;
+    padding: 5px;
+    line-height: 1;
+}
+
+.popup-body {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 5px; /* Pour éviter que la scrollbar ne colle au texte */
+}
+
+.popup-footer {
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end; /* Alignement des boutons à droite */
+    gap: 10px;
+}
+
+.popup-button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.popup-button.green { background-color: var(--button-green); color: var(--text-white); }
+.popup-button.green:hover { background-color: #229954; }
+
+.popup-button.blue { background-color: var(--button-blue); color: var(--text-white); }
+.popup-button.blue:hover { background-color: #2980b9; }
+
+.popup-button.red { background-color: var(--button-red); color: var(--text-white); }
+.popup-button.red:hover { background-color: #c0392b; }
+
+.popup-button.gray { background-color: var(--button-gray); color: var(--text-white); }
+.popup-button.gray:hover { background-color: #6c7a89; }
+
+
+/* Styles pour les sections d'information dans les popups */
+.info-section {
+    background-color: var(--header-blue);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.info-section h3 {
+    color: var(--text-white);
+    font-size: 1.1em;
+    margin-top: 0;
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 8px;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px dashed rgba(255,255,255,0.05);
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    color: var(--text-light);
+    font-size: 0.95em;
+}
+
+.info-value {
+    color: var(--text-white);
+    font-weight: bold;
+    font-size: 0.95em;
+}
+
+.info-value.green { color: var(--text-green); }
+
+
+/* Barres de progression */
+.progress-bar-container {
+    margin-bottom: 10px;
+}
+.progress-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9em;
+    margin-bottom: 3px;
+}
+.progress-bar-wrapper {
+    background-color: var(--header-blue);
+    border-radius: 5px;
+    height: 12px;
+    overflow: hidden;
+}
+.progress-bar-fill {
+    height: 100%;
+    width: 0%; /* Sera rempli par JS */
+    border-radius: 5px;
+    transition: width 0.5s ease-out;
+}
+
+/* Couleurs spécifiques pour les barres */
+.progress-bar-fill.blue { background-color: var(--button-blue); }
+.progress-bar-fill.red { background-color: var(--button-red); }
+.progress-bar-fill.purple { background-color: var(--text-purple); }
+.progress-bar-fill.green { background-color: var(--text-green); }
+.progress-bar-fill.orange { background-color: var(--text-orange); }
+.progress-bar-fill.dark-orange { background-color: #e67e22; } /* Pour Maladie */
+.progress-bar-fill.light-gray { background-color: #95a5a6; } /* Pour Autres */
+
+
+/* Classement */
+.classement-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+.classement-table th, .classement-table td {
+    padding: 8px 5px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.classement-table th {
+    background-color: var(--header-blue);
+    font-weight: bold;
+    font-size: 0.9em;
+}
+.classement-table td {
+    font-size: 0.85em;
+    color: var(--text-light);
+}
+
+.rank-1 { color: var(--text-gold); font-weight: bold; }
+.rank-2 { color: var(--text-silver); font-weight: bold; }
+.rank-3 { color: var(--text-bronze); font-weight: bold; }
+
+.total-value { color: var(--text-green); font-weight: bold; }
+
+/* Messages d'information (snack-bar like) */
+#snackbar {
+    visibility: hidden; /* Hidden by default. */
+    min-width: 250px; /* Set a default minimum width */
+    margin-left: -125px; /* Divide value of min-width by 2 */
+    background-color: #333; /* Black background color */
+    color: #fff; /* White text color */
+    text-align: center; /* Centered text */
+    border-radius: 8px; /* Rounded borders */
+    padding: 16px; /* Padding */
+    position: fixed; /* Sit on top of the screen */
+    z-index: 3000; /* Add a z-index if needed */
+    left: 50%; /* Center the snackbar */
+    bottom: 30px; /* 30px from the bottom */
+    font-size: 0.9em;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+/* Show the snackbar when clicking on a button (class added with JavaScript) */
+#snackbar.show {
+    visibility: visible; /* Show the snackbar */
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+/* Animations for fade-in and fade-out */
+@-webkit-keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
+
+/* Responsivité de base */
+@media (max-width: 400px) {
+    .app-header h1 {
+        font-size: 1.2em;
+    }
+    .menu-button {
+        padding: 15px 10px;
+        font-size: 1em;
+    }
+    .popup-content {
+        padding: 15px;
+    }
+    .popup-header {
+        margin: -15px -15px 15px -15px;
+    }
+    .popup-header h2 {
+        font-size: 1.1em;
+    }
+    .popup-footer {
+        padding-top: 15px;
+        margin-top: 15px;
+    }
+}
